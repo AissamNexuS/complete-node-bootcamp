@@ -2,7 +2,7 @@ const express = require('express');
 
 const userController = require('../controllers/userController');
 
-//routes
+// routes
 const router = express.Router();
 
 router
