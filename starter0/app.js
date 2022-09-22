@@ -26,8 +26,4 @@ app.use((req, res, next) => {
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourTouter);
 // 4) Start Server
-
-const port = 8080;
-app.listen(port, () => {
-  console.log(`app listening on port ${port}`);
-});
+module.exports = app;
