@@ -1,8 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
+const AppError = require('./utils/appError');
 
 const tourTouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const golbalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 
@@ -16,12 +18,10 @@ app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
-  console.log('hello from meddelware  ');
   next();
 });
 
 app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
   next();
 });
 
@@ -29,5 +29,16 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourTouter);
+
+// 404 NOT found
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find [ ${req.originalUrl} ] on this server !`, 404));
+});
+
+//golbal Error Handler
+
+app.use(golbalErrorHandler);
+
 // 4) Start Server
 module.exports = app;

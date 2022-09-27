@@ -1,8 +1,9 @@
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const app = require('./app');
 
 dotenv.config({ path: './config.env' });
+
+const app = require('./app');
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -16,10 +17,12 @@ mongoose
     useFindAndModify: false,
     useUnifiedTopology: true,
   })
+  // eslint-disable-next-line
   .then(() => console.log('db connection successfully '));
 
 //========================================================
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
+  // eslint-disable-next-line
   console.log(`app listening on port ${port}`);
 });
