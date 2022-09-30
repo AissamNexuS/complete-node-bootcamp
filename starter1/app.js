@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -12,6 +13,18 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+app.use(bodyParser.json());
+
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError)
+    return res.status(500).json({
+      status: 500,
+      SyntaxError: true,
+      message: 'The body of your request is not valid json!'
+    });
+  next();
+});
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
