@@ -1,5 +1,16 @@
 const AppError = require('../utils/appError');
 
+// Dev err
+const sendErrorDev = (err, res) => {
+  res.status(err.statusCode).json({
+    status: err.status,
+    error: err,
+    message: err.message,
+    stack: err.stack
+  });
+};
+
+// Prod err
 const handleCastErrorDB = err => {
   const message = `Invalid  this : [${err.path}] => [${err.value}].`;
   return new AppError(message, 400);
@@ -7,7 +18,7 @@ const handleCastErrorDB = err => {
 
 const handleDuplicateFieldsDB = err => {
   const value = err.errmsg.match(/(["'])(?:(?=(\\?))\2.)*?\1/)[0];
-  console.log(value);
+  console.log('value 💥 -----> :', value);
 
   const message = `Duplicate field value:  ${value} . Please use another value!`;
   return new AppError(message, 400);
@@ -18,15 +29,6 @@ const handleValidationErrorDB = err => {
 
   const message = `Invalid input data : ${errors.join(' , and ')}`;
   return new AppError(message, 400);
-};
-
-const sendErrorDev = (err, res) => {
-  res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  });
 };
 
 const handleJWTError = () =>
